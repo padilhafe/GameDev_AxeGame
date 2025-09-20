@@ -37,6 +37,7 @@ int main()
     int enemyEdgeBottom = enemyY + enemyHeight;
 
     // Other Game Configurations
+    bool gameOver = false;
     int score = 0;
 
     // Initialize the random number generator and game window
@@ -52,44 +53,50 @@ int main()
         BeginDrawing();
         ClearBackground(WHITE);
 
-        // Game Logic Begins
-        // Player Spawn
-        DrawCircle(playerX, playerY, playerRadius, BLUE);
-        // Enemy Spawn
-        DrawRectangle(enemyX, enemyY, enemyWidth, enemyHeight, RED);
-
-        // Enemy Movement and Logic
-        enemyY += enemySpeed;
-        if (enemyY > screenHeight + enemyHeight || enemyY < -enemyHeight)
+        if (gameOver)
         {
-            score++;
+            DrawText("Game Over!", screenWidth / 2 - MeasureText("Game Over!", 50) / 2, screenHeight / 2 - 25, 50, RED);
+            DrawText(TextFormat("Final Score: %04d", score), screenWidth / 2 - MeasureText(TextFormat("Final Score: %04d", score), 30) / 2, screenHeight / 2 + 40, 30, BLACK);
+        } else {
+            // Game Logic Begins
+            // Player Spawn
+            DrawCircle(playerX, playerY, playerRadius, BLUE);
+            // Enemy Spawn
+            DrawRectangle(enemyX, enemyY, enemyWidth, enemyHeight, RED);
 
-            // Reverse the enemy movement position
-            // to do: bounce towards the player
-            enemySpeed = -enemySpeed;
+            // Enemy Movement and Logic
+            enemyY += enemySpeed;
+            if (enemyY > screenHeight + enemyHeight || enemyY < -enemyHeight)
+            {
+                score++;
+
+                // Reverse the enemy movement position
+                // to do: bounce towards the player
+                enemySpeed = -enemySpeed;
+            }
+
+            // Player Movement Controls
+            if ((IsKeyDown(KEY_D) ||
+                IsKeyDown(KEY_RIGHT) ||
+                IsGamepadButtonDown(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) ||
+                (GetGamepadAxisMovement(GAMEPAD, GAMEPAD_AXIS_LEFT_X) > 0.5f)) &&
+                playerX < screenWidth - playerRadius)
+            {
+                playerX += playerSpeed;
+            }
+
+            if ((IsKeyDown(KEY_A) ||
+                IsKeyDown(KEY_LEFT) ||
+                IsGamepadButtonDown(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_LEFT) ||
+                (GetGamepadAxisMovement(GAMEPAD, GAMEPAD_AXIS_LEFT_X) < -0.5f)) &&
+                playerX > 0 + playerRadius)
+            {
+                playerX -= playerSpeed;
+            }
+
+            // Display Score
+            DrawText(TextFormat("Score: %04d", score), 10, 10, 30, BLACK);
         }
-
-        // Player Movement Controls
-        if ((IsKeyDown(KEY_D) ||
-             IsKeyDown(KEY_RIGHT) ||
-             IsGamepadButtonDown(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) ||
-             (GetGamepadAxisMovement(GAMEPAD, GAMEPAD_AXIS_LEFT_X) > 0.5f)) &&
-            playerX < screenWidth - playerRadius)
-        {
-            playerX += playerSpeed;
-        }
-
-        if ((IsKeyDown(KEY_A) ||
-             IsKeyDown(KEY_LEFT) ||
-             IsGamepadButtonDown(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_LEFT) ||
-             (GetGamepadAxisMovement(GAMEPAD, GAMEPAD_AXIS_LEFT_X) < -0.5f)) &&
-            playerX > 0 + playerRadius)
-        {
-            playerX -= playerSpeed;
-        }
-
-        // Display Score
-        DrawText(TextFormat("Score: %04d", score), 10, 10, 30, BLACK);
         EndDrawing();
     }
 }
