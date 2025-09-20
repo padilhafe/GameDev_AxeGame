@@ -29,12 +29,12 @@ int main()
     // Other Game Configurations
     int score = 0;
 
-    // Inicializa o gerador de números e a janela
+    // Initialize the random number generator and game window
     srand((unsigned)time(NULL));
     InitWindow(screenWidth, screenHeight, TITLE);
     SetTargetFPS(FPS);
 
-    // Sorteia a posição inicial do inimigo
+    // Initial Enemy Position
     enemyX = GetRandomValue(enemyWidth, screenWidth - enemyWidth);
 
     while (!WindowShouldClose())
@@ -43,19 +43,22 @@ int main()
         ClearBackground(WHITE);
 
         // Game Logic Begins
+        // Player Spawn
         DrawCircle(playerX, playerY, playerRadius, BLUE);
+        // Enemy Spawn
         DrawRectangle(enemyX, enemyY, enemyWidth, enemyHeight, RED);
+
+        // Enemy Movement and Logic
         enemyY += enemySpeed;
-        if (enemyY > screenHeight + enemyHeight)
+        if (enemyY > screenHeight + enemyHeight || enemyY < -enemyHeight)
         {
             score++;
 
-            // Reset enemy position
-            enemyY = -enemyHeight;
-            enemyX = GetRandomValue(enemyWidth, screenWidth - enemyWidth);
+            // Reverse the enemy movement position and bouce torwards the player
+            enemySpeed = -enemySpeed;
         }
 
-        // Movement Controls
+        // Player Movement Controls
         if ((IsKeyDown(KEY_D) || 
              IsKeyDown(KEY_RIGHT) || 
              IsGamepadButtonDown(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) ||
