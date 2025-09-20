@@ -15,7 +15,7 @@ int main()
     int circleX = width /2;
     int circleY = height/2;
     int circleRadius = 50;
-    int circleSpeed = 5;
+    int circleSpeed = 15;
 
     InitWindow(width, height, TITLE);
     SetTargetFPS(FPS);
@@ -28,18 +28,20 @@ int main()
         DrawCircle(circleX, circleY, circleRadius, BLUE);
 
         // Movement Controls
-        if (IsKeyDown(KEY_D) || 
+        if ((IsKeyDown(KEY_D) || 
             IsKeyDown(KEY_RIGHT) || 
             IsGamepadButtonDown(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) ||
-            (GetGamepadAxisMovement(GAMEPAD, GAMEPAD_AXIS_LEFT_X) > 0.5f))
+            (GetGamepadAxisMovement(GAMEPAD, GAMEPAD_AXIS_LEFT_X) > 0.5f)) &&
+            circleX < width - circleRadius)
         {
             circleX += circleSpeed;
         }
 
-        if (IsKeyDown(KEY_A) || 
+        if ((IsKeyDown(KEY_A) || 
             IsKeyDown(KEY_LEFT) || 
             IsGamepadButtonDown(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_LEFT) ||
-            (GetGamepadAxisMovement(GAMEPAD, GAMEPAD_AXIS_LEFT_X) < -0.5f))
+            (GetGamepadAxisMovement(GAMEPAD, GAMEPAD_AXIS_LEFT_X) < -0.5f)) &&
+            circleX > 0 + circleRadius)
         {
             circleX -= circleSpeed;
         }
