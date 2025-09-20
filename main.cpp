@@ -10,7 +10,7 @@
 int main()
 {
     // Window dimensions
-    int screenWidth  = 1270;
+    int screenWidth = 1270;
     int screenHeight = 768;
 
     // Player Configuration
@@ -18,6 +18,11 @@ int main()
     int playerY = screenHeight - 100;
     int playerRadius = 50;
     int playerSpeed = 15;
+    // Player Edges
+    int playerEdgeLeft = playerX - playerRadius;
+    int playerEdgeRigth = playerX + playerRadius;
+    int playerEdgeTop = playerY - playerRadius;
+    int playerEdgeBottom = playerY + playerRadius;
 
     // Enemy Configuration
     int enemyWidth = 50;
@@ -25,6 +30,11 @@ int main()
     int enemySpeed = 10;
     int enemyX;
     int enemyY = -enemyHeight;
+    // Enemy Edges
+    int enemyEdgeLeft = enemyX;
+    int enemyEdgeRigth = enemyX + enemyWidth;
+    int enemyEdgeTop = enemyY;
+    int enemyEdgeBottom = enemyY + enemyHeight;
 
     // Other Game Configurations
     int score = 0;
@@ -54,13 +64,14 @@ int main()
         {
             score++;
 
-            // Reverse the enemy movement position and bouce torwards the player
+            // Reverse the enemy movement position
+            // to do: bounce towards the player
             enemySpeed = -enemySpeed;
         }
 
         // Player Movement Controls
-        if ((IsKeyDown(KEY_D) || 
-             IsKeyDown(KEY_RIGHT) || 
+        if ((IsKeyDown(KEY_D) ||
+             IsKeyDown(KEY_RIGHT) ||
              IsGamepadButtonDown(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) ||
              (GetGamepadAxisMovement(GAMEPAD, GAMEPAD_AXIS_LEFT_X) > 0.5f)) &&
             playerX < screenWidth - playerRadius)
@@ -68,8 +79,8 @@ int main()
             playerX += playerSpeed;
         }
 
-        if ((IsKeyDown(KEY_A) || 
-             IsKeyDown(KEY_LEFT) || 
+        if ((IsKeyDown(KEY_A) ||
+             IsKeyDown(KEY_LEFT) ||
              IsGamepadButtonDown(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_LEFT) ||
              (GetGamepadAxisMovement(GAMEPAD, GAMEPAD_AXIS_LEFT_X) < -0.5f)) &&
             playerX > 0 + playerRadius)
