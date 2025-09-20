@@ -1,4 +1,6 @@
 #include "raylib.h"
+#include <stdlib.h>
+#include <ctime>
 
 // Configuration Constants
 #define TITLE "Axe Game"
@@ -8,45 +10,72 @@
 int main()
 {
     // Window dimensions
-    int width  = 1270;
-    int height = 768;
+    int screenWidth  = 1270;
+    int screenHeight = 768;
 
-    // Circle Coordinates
-    int circleX = width /2;
-    int circleY = height/2;
-    int circleRadius = 50;
-    int circleSpeed = 15;
+    // Player Configuration
+    int playerX = screenWidth / 2;
+    int playerY = screenHeight - 100;
+    int playerRadius = 50;
+    int playerSpeed = 15;
 
-    InitWindow(width, height, TITLE);
+    // Enemy Configuration
+    int enemyWidth = 50;
+    int enemyHeight = 50;
+    int enemySpeed = 10;
+    int enemyX;
+    int enemyY = -enemyHeight;
+
+    // Other Game Configurations
+    int score = 0;
+
+    // Inicializa o gerador de números e a janela
+    srand((unsigned)time(NULL));
+    InitWindow(screenWidth, screenHeight, TITLE);
     SetTargetFPS(FPS);
+
+    // Sorteia a posição inicial do inimigo
+    enemyX = GetRandomValue(enemyWidth, screenWidth - enemyWidth);
+
     while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(WHITE);
 
         // Game Logic Begins
-        DrawCircle(circleX, circleY, circleRadius, BLUE);
+        DrawCircle(playerX, playerY, playerRadius, BLUE);
+        DrawRectangle(enemyX, enemyY, enemyWidth, enemyHeight, RED);
+        enemyY += enemySpeed;
+        if (enemyY > screenHeight + enemyHeight)
+        {
+            score++;
+
+            // Reset enemy position
+            enemyY = -enemyHeight;
+            enemyX = GetRandomValue(enemyWidth, screenWidth - enemyWidth);
+        }
 
         // Movement Controls
         if ((IsKeyDown(KEY_D) || 
-            IsKeyDown(KEY_RIGHT) || 
-            IsGamepadButtonDown(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) ||
-            (GetGamepadAxisMovement(GAMEPAD, GAMEPAD_AXIS_LEFT_X) > 0.5f)) &&
-            circleX < width - circleRadius)
+             IsKeyDown(KEY_RIGHT) || 
+             IsGamepadButtonDown(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) ||
+             (GetGamepadAxisMovement(GAMEPAD, GAMEPAD_AXIS_LEFT_X) > 0.5f)) &&
+            playerX < screenWidth - playerRadius)
         {
-            circleX += circleSpeed;
+            playerX += playerSpeed;
         }
 
         if ((IsKeyDown(KEY_A) || 
-            IsKeyDown(KEY_LEFT) || 
-            IsGamepadButtonDown(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_LEFT) ||
-            (GetGamepadAxisMovement(GAMEPAD, GAMEPAD_AXIS_LEFT_X) < -0.5f)) &&
-            circleX > 0 + circleRadius)
+             IsKeyDown(KEY_LEFT) || 
+             IsGamepadButtonDown(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_LEFT) ||
+             (GetGamepadAxisMovement(GAMEPAD, GAMEPAD_AXIS_LEFT_X) < -0.5f)) &&
+            playerX > 0 + playerRadius)
         {
-            circleX -= circleSpeed;
+            playerX -= playerSpeed;
         }
 
-        // Game Logic Ends
+        // Display Score
+        DrawText(TextFormat("Score: %04d", score), 10, 10, 30, BLACK);
         EndDrawing();
     }
 }
