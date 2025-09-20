@@ -81,7 +81,6 @@ int main()
             if (enemyY > screenHeight + enemyHeight || enemyY < -enemyHeight)
             {
                 score++;
-                DrawRectangle(enemyX, enemyY, enemyWidth, enemyHeight, RED);
 
                 // Reverse the enemy movement position
                 // to do: bounce towards the player
